@@ -1,0 +1,875 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060A10;color:#C8D8E8;font-family:'Exo 2',sans-serif;min-height:100vh}
+:root{--crimson:#C0392B;--crimson-dim:#7A1A10;--cyan:#00E5FF;--cyan-dim:#007A8C;--gold:#FFD700;--gold-dim:#806B00;--surface:#0D1520;--surface2:#131E2E;--surface3:#1A2840;--border:#1F3050;--border-bright:#2A4570;--text:#C8D8E8;--text-dim:#5A7A9A;--text-bright:#E8F4FF;--green:#2ECC71;--green-dim:#1A5C35}
+.app{max-width:1200px;margin:0 auto;padding:14px;min-height:100vh;display:flex;flex-direction:column}
+.hdr{display:flex;align-items:center;gap:14px;padding:14px 20px;background:var(--surface);border:1px solid var(--border);border-bottom:2px solid var(--crimson);margin-bottom:14px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.hdr-icon{width:44px;height:44px;background:var(--crimson);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.hdr h1{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text-bright);letter-spacing:3px;text-transform:uppercase}
+.hdr p{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
+.ai-tag{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);border:1px solid var(--gold-dim);padding:1px 6px;margin-left:6px}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.dot{width:7px;height:7px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,0.4)}50%{box-shadow:0 0 0 5px rgba(0,229,255,0)}}
+.tabs{display:flex;gap:2px;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);padding:4px}
+.tab{flex:1;padding:9px 6px;background:transparent;border:none;color:var(--text-dim);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px}
+.tab.active{background:var(--crimson);color:#fff}
+.tab:hover:not(.active){background:var(--surface2);color:var(--text)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.main{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:var(--surface);border:1px solid var(--border);padding:14px;margin-bottom:0}
+.ph{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--border)}
+.pt{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--cyan);letter-spacing:2px;text-transform:uppercase}
+lbl,label{display:block;font-size:10px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;margin-top:10px}
+label:first-of-type{margin-top:0}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Exo 2',sans-serif;font-size:12px;padding:7px 9px;outline:none;transition:border 0.2s}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan-dim)}
+select option{background:var(--surface2)}
+textarea{resize:vertical}
+.tg{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.tag{padding:3px 9px;font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;border:1px solid;cursor:pointer;transition:all 0.2s;user-select:none}
+.ct{border-color:var(--border-bright);color:var(--text-dim)}.ct.sel{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.et{border-color:var(--border-bright);color:var(--text-dim)}.et.sel{background:var(--surface3);border-color:var(--cyan-dim);color:var(--cyan)}
+.btn{width:100%;padding:11px;background:var(--crimson);border:none;color:#fff;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn:hover{background:#E53935}.btn:disabled{background:var(--crimson-dim);cursor:not-allowed}
+.btn-g{background:rgba(46,204,113,0.15);border:1px solid var(--green-dim);color:var(--green)}.btn-g:hover{background:rgba(46,204,113,0.25)}
+.btn-gold{background:rgba(255,215,0,0.1);border:1px solid var(--gold-dim);color:var(--gold)}.btn-gold:hover{background:rgba(255,215,0,0.2)}
+.btn-blue{background:rgba(52,152,219,0.15);border:1px solid #1A4A6E;color:#5DADE2}.btn-blue:hover{background:rgba(52,152,219,0.25)}
+.btn-sm{padding:7px 12px;font-size:11px;letter-spacing:1.5px;width:auto;margin-top:0}
+.rs,.result-section{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.rs:last-child,.result-section:last-child{border-bottom:none;margin-bottom:0}
+.rl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px}
+.rv{font-size:12px;line-height:1.6;color:var(--text)}
+.rv.hl{color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:11px}
+.rv.inf{color:var(--cyan)}
+.mc{background:var(--surface2);border:1px solid var(--border);padding:10px;margin-bottom:7px;position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.mc.high::before{background:var(--crimson)}.mc.medium::before{background:var(--gold)}.mc.low::before{background:var(--cyan-dim)}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.mn{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text-bright)}
+.ms{font-family:'Share Tech Mono',monospace;font-size:11px;padding:2px 7px}
+.ms.high{background:rgba(192,57,43,0.3);color:#FF5252;border:1px solid var(--crimson-dim)}
+.ms.medium{background:rgba(255,215,0,0.15);color:var(--gold);border:1px solid var(--gold-dim)}
+.ms.low{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid var(--cyan-dim)}
+.md{font-size:11px;color:var(--text-dim);line-height:1.5}
+.load{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;gap:10px}
+.lb{width:180px;height:2px;background:var(--border);overflow:hidden}
+.lbf{height:100%;background:var(--crimson);animation:ld 1.5s infinite}
+@keyframes ld{0%{width:0;margin-left:0}50%{width:60%}100%{width:0;margin-left:100%}}
+.lt{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:2px;animation:bl 1s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0.3}}
+.es{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;gap:8px;color:var(--text-dim);text-align:center}
+.es .bi{font-size:36px;opacity:0.25}
+.rbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.r-high{background:rgba(192,57,43,0.2);border:1px solid var(--crimson);color:#FF5252}
+.r-med{background:rgba(255,215,0,0.1);border:1px solid var(--gold-dim);color:var(--gold)}
+.r-low{background:rgba(0,229,255,0.1);border:1px solid var(--cyan-dim);color:var(--cyan)}
+.drow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border)}
+.drow:last-child{border-bottom:none}
+.dav{width:34px;height:34px;background:var(--surface3);border:1px solid var(--border-bright);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'Rajdhani',sans-serif;color:var(--cyan)}
+.dnm{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text-bright)}
+.dsb{font-size:10px;color:var(--text-dim);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dbadge{font-family:'Share Tech Mono',monospace;font-size:10px;padding:2px 5px;border:1px solid var(--crimson-dim);color:#FF5252;background:rgba(192,57,43,0.15);white-space:nowrap}
+.dexp{background:var(--surface2);border:1px solid var(--border);padding:10px;margin-bottom:3px;font-size:11px;color:var(--text-dim);line-height:1.8;display:none}
+.dexp.open{display:block}
+.dwrap{cursor:pointer}.dwrap:hover .dnm{color:var(--cyan)}
+.hidden{display:none}
+.fade-in{animation:fi 0.3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.sn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:var(--crimson);color:#fff;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;flex-shrink:0;margin-right:5px}
+.tbadge{font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1px;padding:2px 6px;background:rgba(0,229,255,0.1);border:1px solid var(--cyan-dim);color:var(--cyan)}
+.divider{height:1px;background:var(--border);margin:10px 0}
+.pgbtn{background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);font-family:'Rajdhani',sans-serif;font-size:11px;padding:4px 10px;cursor:pointer}
+.pgbtn:hover{border-color:var(--cyan-dim);color:var(--cyan)}
+.pgbtn.ap{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.sc{background:var(--surface);position:relative}
+.sc::after{content:'';position:absolute;left:0;right:0;height:1px;background:rgba(0,229,255,0.1);animation:sc 4s linear infinite;pointer-events:none}
+@keyframes sc{from{top:0}to{top:100%}}
+.toast{position:fixed;bottom:20px;right:20px;background:#1A3A1A;border:1px solid #2E7D32;color:#81C784;font-family:'Share Tech Mono',monospace;font-size:11px;padding:9px 16px;letter-spacing:1px;z-index:9999;display:none;animation:si 0.3s ease}
+@keyframes si{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;overflow-y:auto;padding:16px;display:none}
+.modal-box{max-width:780px;margin:0 auto;background:var(--surface);border:1px solid var(--border-bright)}
+.modal-hdr{background:var(--surface2);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.modal-hdr .pt{margin:0}
+.modal-body{padding:18px}
+.modal-close{background:transparent;border:1px solid var(--border);color:var(--text-dim);width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.fmt-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.fmt-btn{padding:10px;background:var(--surface2);border:1px solid var(--border-bright);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:center;transition:all 0.2s}
+.fmt-btn:hover{border-color:var(--cyan-dim);color:var(--cyan)}
+.fmt-btn .fmt-icon{font-size:22px;display:block;margin-bottom:4px}
+.fmt-btn .fmt-sub{font-size:9px;color:var(--text-dim);letter-spacing:1px}
+.rp-banner{background:rgba(255,215,0,0.06);border:1px solid var(--gold-dim);padding:9px 12px;display:flex;align-items:center;gap:9px;margin-top:10px}
+.stat-card{background:var(--surface2);border:1px solid var(--border);padding:12px;text-align:center}
+.stat-num{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;line-height:1}
+.stat-lbl{font-size:9px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px}
+.added-badge{background:rgba(46,204,113,0.15);border:1px solid var(--green-dim);color:var(--green);font-size:9px;font-family:'Share Tech Mono',monospace;padding:1px 5px;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hdr">
+  <div class="hdr-icon">🔍</div>
+  <div>
+    <h1>ForensIQ <span class="ai-tag">⚡ AI</span></h1>
+    <p>Forensic Intelligence & Criminal Analysis System — India Edition</p>
+  </div>
+  <div class="hdr-right">
+    <div class="dot"></div>
+    <span style="font-size:10px;color:var(--text-dim);letter-spacing:1px">LIVE</span>
+    <span id="dbCountBadge" style="background:var(--crimson);color:#fff;font-family:'Rajdhani',sans-serif;font-size:10px;letter-spacing:1px;padding:3px 8px">40 RECORDS</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="sw('analyze')" id="tab-analyze">🔬 Case Analysis</button>
+  <button class="tab" onclick="sw('database')" id="tab-database">🗃️ Criminal Database</button>
+  <button class="tab" onclick="sw('stats')" id="tab-stats">📊 Statistics</button>
+</div>
+
+<!-- ═══ ANALYZE TAB ═══ -->
+<div id="view-analyze" class="fade-in">
+  <div class="main">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="panel">
+        <div class="ph"><span>📁</span><span class="pt">Case & FIR Details</span></div>
+        <div class="grid2">
+          <div><label>Case / FIR Number</label><input id="caseId" placeholder="FIR No. / Case Ref." /></div>
+          <div><label>Date of FIR / Incident</label><input type="date" id="incidentDate" /></div>
+        </div>
+        <div class="grid2">
+          <div><label>Police Station</label><input id="policeStation" placeholder="e.g. Anna Nagar PS" /></div>
+          <div><label>District</label><input id="district" placeholder="e.g. Chennai North" /></div>
+        </div>
+        <div class="grid2">
+          <div><label>Investigating Officer & Designation</label><input id="officer" placeholder="Name, Rank, Badge No." /></div>
+          <div><label>Unit / Department</label><input id="department" placeholder="e.g. CID, Cyber Cell" /></div>
+        </div>
+        <div class="grid2">
+          <div><label>Sections Applicable (IPC / IT Act / NDPS)</label><input id="ipcSections" placeholder="e.g. IPC 302, 120B; IT Act 66C" /></div>
+          <div><label>Court Name (if filing)</label><input id="courtName" placeholder="e.g. Chief Judicial Magistrate" /></div>
+        </div>
+        <label>Crime Type(s)</label>
+        <div class="tg" id="crimeTags">
+          <span class="tag ct" onclick="tg(this,'c')" data-v="theft">Theft</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="burglary">Burglary</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="robbery">Robbery</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="assault">Assault</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="murder">Murder</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="fraud">Fraud</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="cybercrime">Cybercrime</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="kidnapping">Kidnapping</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="arson">Arson</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="drug-related">Drug-Related</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="extortion">Extortion</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="trafficking">Trafficking</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="gang-violence">Gang Violence</span>
+          <span class="tag ct" onclick="tg(this,'c')" data-v="sexual-assault">Sexual Assault</span>
+        </div>
+        <div class="grid2" style="margin-top:10px">
+          <div><label>Incident Location</label><input id="location" placeholder="Area / City" /></div>
+          <div><label>Victim Name / Details</label><input id="victim" placeholder="Name, Age, Occupation" /></div>
+        </div>
+        <label>Case Description</label>
+        <textarea id="caseDesc" rows="4" placeholder="Sequence of events, time, circumstances, witness details..."></textarea>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><span>🧬</span><span class="pt">MO & Evidence</span></div>
+        <label>Modus Operandi</label>
+        <textarea id="modus" rows="3" placeholder="Method, tools/weapons, entry/exit, team size, timing..."></textarea>
+        <label>Evidence Collected</label>
+        <div class="tg">
+          <span class="tag et" onclick="tg(this,'e')" data-v="fingerprints">Fingerprints</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="dna">DNA Sample</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="footprints">Footprints</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="cctv">CCTV Footage</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="weapon">Weapon Found</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="vehicle">Vehicle Evidence</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="digital">Digital Evidence</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="witness">Witness Statement</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="documents">Documents</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="blood">Blood/Fluids</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="hair">Hair/Fibre</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="mobile">Mobile Records</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="audio">Audio Recording</span>
+          <span class="tag et" onclick="tg(this,'e')" data-v="ballistics">Ballistics</span>
+        </div>
+        <label style="margin-top:9px">Evidence Notes / Lab Results</label>
+        <textarea id="evNotes" rows="2" placeholder="Lab results, specific forensic findings, exhibit numbers..."></textarea>
+        <label>Suspect Description</label>
+        <textarea id="suspect" rows="2" placeholder="Age, build, features, clothing, vehicle, associates..."></textarea>
+        <button class="btn" id="analyzeBtn" onclick="runAnalysis()">⚡ Run AI Forensic Analysis</button>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="panel sc" style="flex:1">
+        <div class="ph">
+          <span>📋</span><span class="pt">Analysis Results</span>
+          <span class="tbadge" id="resBadge" style="margin-left:auto">AWAITING INPUT</span>
+        </div>
+        <div id="resEmpty" class="es"><div class="bi">🧬</div><p style="font-size:11px">Fill case details and run analysis</p></div>
+        <div id="resLoad" class="load hidden">
+          <div style="font-size:22px">🔬</div>
+          <div class="lb"><div class="lbf"></div></div>
+          <div class="lt" id="loadTxt">ANALYZING...</div>
+        </div>
+        <div id="resContent" class="hidden fade-in">
+          <div class="rs"><div class="rl">Crime Classification</div><div class="rv hl" id="r-cls"></div></div>
+          <div class="rs"><div class="rl">Risk Assessment</div><div id="r-risk"></div></div>
+          <div class="rs"><div class="rl">AI Analysis Summary</div><div class="rv" id="r-sum" style="line-height:1.7;font-size:12px"></div></div>
+          <div class="rs"><div class="rl">Behavioral Pattern</div><div class="rv inf" id="r-pat" style="font-size:12px"></div></div>
+          <div class="rs"><div class="rl">Recommended Actions</div><div class="rv" id="r-act" style="font-size:11px;line-height:1.9"></div></div>
+          <div class="rp-banner">
+            <span style="font-size:18px">📄</span>
+            <div style="flex:1">
+              <div style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px">COURT-READY REPORT AVAILABLE</div>
+              <div style="font-size:10px;color:var(--text-dim);margin-top:2px">Formatted for Indian courts — PDF, DOCX, HTML</div>
+            </div>
+          </div>
+          <div class="fmt-btns">
+            <div class="fmt-btn" onclick="dlReport('pdf')"><span class="fmt-icon">📕</span>PDF<div class="fmt-sub">Print-Quality PDF</div></div>
+            <div class="fmt-btn" onclick="dlReport('docx')"><span class="fmt-icon">📘</span>DOCX<div class="fmt-sub">MS Word Document</div></div>
+            <div class="fmt-btn" onclick="dlReport('html')"><span class="fmt-icon">📗</span>HTML<div class="fmt-sub">Web / Archive</div></div>
+          </div>
+          <button class="btn btn-gold" style="margin-top:8px" onclick="openPreview()">👁️ Preview Report Before Download</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><span>👥</span><span class="pt">DB Matches</span><span class="tbadge" id="matchBadge" style="margin-left:auto">0 MATCHES</span></div>
+        <div id="matchEmpty" class="es" style="padding:20px"><div class="bi">👤</div><p style="font-size:11px">Matches appear after analysis</p></div>
+        <div id="matchContent" class="hidden fade-in"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DATABASE TAB ═══ -->
+<div id="view-database" class="hidden fade-in">
+  <div class="panel">
+    <div class="ph">
+      <span>🗃️</span><span class="pt">Criminal Records</span>
+      <span class="tbadge" id="dbCount" style="margin-left:auto">40 RECORDS</span>
+      <button class="btn btn-g btn-sm" style="margin-left:8px" onclick="openAddModal()">＋ Add Criminal</button>
+    </div>
+    <div class="grid2" style="margin-bottom:9px">
+      <input id="dbSearch" placeholder="Search name, city, crime, MO..." oninput="filterDB()" />
+      <select id="dbFilter" onchange="filterDB()">
+        <option value="">All Crime Types</option>
+        <option value="theft">Theft</option><option value="burglary">Burglary</option>
+        <option value="robbery">Robbery</option><option value="assault">Assault</option>
+        <option value="fraud">Fraud</option><option value="murder">Murder</option>
+        <option value="drug">Drug-Related</option><option value="cybercrime">Cybercrime</option>
+        <option value="kidnapping">Kidnapping</option><option value="arson">Arson</option>
+        <option value="extortion">Extortion</option><option value="trafficking">Trafficking</option>
+        <option value="gang">Gang Violence</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:10px;color:var(--text-dim)">RISK:</span>
+      <button class="pgbtn ap" onclick="setRF('',this)">ALL</button>
+      <button class="pgbtn" onclick="setRF('HIGH',this)">HIGH</button>
+      <button class="pgbtn" onclick="setRF('MEDIUM',this)">MEDIUM</button>
+      <button class="pgbtn" onclick="setRF('LOW',this)">LOW</button>
+      <span style="font-size:10px;color:var(--text-dim);margin-left:auto">↓ Click row for details</span>
+    </div>
+    <div id="dbList"></div>
+    <div style="display:flex;gap:5px;margin-top:10px;justify-content:center" id="pg"></div>
+  </div>
+</div>
+
+<!-- ═══ STATS TAB ═══ -->
+<div id="view-stats" class="hidden fade-in">
+  <div class="panel"><div class="ph"><span>📊</span><span class="pt">Crime Statistics</span></div><div id="statsContent"></div></div>
+</div>
+
+<!-- ═══ ADD CRIMINAL MODAL ═══ -->
+<div id="addModal" class="modal-bg">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <span class="pt">➕ Add New Criminal Record</span>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid2">
+        <div><label>Full Name *</label><input id="a-name" placeholder="Full name" /></div>
+        <div><label>Age *</label><input id="a-age" type="number" min="10" max="99" placeholder="Age" /></div>
+      </div>
+      <div class="grid3">
+        <div><label>Gender</label>
+          <select id="a-gender"><option value="M">Male</option><option value="F">Female</option><option value="O">Other</option></select>
+        </div>
+        <div><label>Last Seen (City)</label><input id="a-city" placeholder="City" /></div>
+        <div><label>State</label><input id="a-state" placeholder="State" /></div>
+      </div>
+      <label>Crime Types (comma-separated) *</label>
+      <input id="a-crimes" placeholder="e.g. theft, burglary, assault" />
+      <label>Modus Operandi *</label>
+      <textarea id="a-mo" rows="3" placeholder="How crimes are carried out, patterns, methods, timing..."></textarea>
+      <div class="grid3">
+        <div><label>Prior Convictions</label><input id="a-conv" type="number" min="0" placeholder="0" /></div>
+        <div><label>Risk Level</label>
+          <select id="a-risk"><option value="HIGH">HIGH</option><option value="MEDIUM">MEDIUM</option><option value="LOW">LOW</option></select>
+        </div>
+        <div><label>Current Status</label>
+          <select id="a-status"><option>Wanted</option><option>In Custody</option><option>Absconding</option><option>On Bail</option><option>Paroled</option><option>Under Investigation</option><option>Acquitted</option></select>
+        </div>
+      </div>
+      <label>Evidence Types on File (comma-separated)</label>
+      <input id="a-ev" placeholder="e.g. fingerprints, cctv, witness" />
+      <label>Known Associates</label>
+      <input id="a-assoc" placeholder="Names or 'Unknown'" />
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="btn btn-g" style="margin-top:0" onclick="addCriminal()">✅ Save to Database</button>
+        <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);width:auto;padding:10px 20px;margin-top:0" onclick="closeAddModal()">Cancel</button>
+      </div>
+      <div id="addMsg" style="margin-top:8px;font-size:11px;font-family:'Share Tech Mono',monospace;display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REPORT PREVIEW MODAL ═══ -->
+<div id="previewModal" class="modal-bg">
+  <div class="modal-box" style="max-width:940px">
+    <div class="modal-hdr">
+      <span class="pt">📄 Report Preview</span>
+      <div style="display:flex;gap:6px">
+        <button class="btn-sm btn btn-gold" style="margin-top:0" onclick="dlReport('pdf')">📕 PDF</button>
+        <button class="btn-sm btn btn-blue" style="margin-top:0;background:rgba(52,152,219,0.15);border:1px solid #1A4A6E;color:#5DADE2" onclick="dlReport('docx')">📘 DOCX</button>
+        <button class="btn-sm btn" style="margin-top:0;background:var(--surface2);border:1px solid var(--border);color:var(--text)" onclick="dlReport('html')">📗 HTML</button>
+        <button class="modal-close" onclick="closePreview()">✕</button>
+      </div>
+    </div>
+    <div id="previewContent" style="background:#fff;max-height:80vh;overflow-y:auto"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+</div>
+
+<script>
+// ══════════════════════ DATABASE ══════════════════════
+let DB = [
+  {id:'C001',name:'Ramesh Kumar',age:34,gender:'M',crimes:['burglary','theft'],mo:'Daytime residential entry via rear, wears gloves, solo operator, targets owners away from home',convictions:3,lastSeen:'Chennai',state:'Tamil Nadu',risk:'HIGH',evidence:['footprints','cctv'],associates:'Unknown',status:'Wanted',custom:false},
+  {id:'C002',name:'Suresh Babu',age:28,gender:'M',crimes:['robbery','assault'],mo:'Armed robbery of shops at night, motorbike escape, 2-person team, targets poorly lit areas',convictions:2,lastSeen:'Hyderabad',state:'Telangana',risk:'HIGH',evidence:['cctv','witness'],associates:'Karthik M.',status:'In Custody',custom:false},
+  {id:'C003',name:'Priya Sharma',age:31,gender:'F',crimes:['fraud','cybercrime'],mo:'Phishing targeting elderly, fake investment portals, VPN-masked, never meets victims',convictions:1,lastSeen:'Bangalore',state:'Karnataka',risk:'MEDIUM',evidence:['digital','documents'],associates:'Unknown',status:'Wanted',custom:false},
+  {id:'C004',name:'Arjun Singh',age:42,gender:'M',crimes:['murder','assault'],mo:'Blunt object violence, gang-linked territorial disputes, targets rivals',convictions:4,lastSeen:'Delhi',state:'Delhi',risk:'HIGH',evidence:['dna','fingerprints','witness'],associates:'D-Gang faction',status:'In Custody',custom:false},
+  {id:'C005',name:'Vikram Nair',age:25,gender:'M',crimes:['drug-related','theft'],mo:'College zone drug distribution, uses juveniles as runners, stashes in rented warehouses',convictions:1,lastSeen:'Kochi',state:'Kerala',risk:'MEDIUM',evidence:['witness','digital'],associates:'Local supplier',status:'On Bail',custom:false},
+  {id:'C006',name:'Meena Reddy',age:38,gender:'F',crimes:['kidnapping','fraud'],mo:'Targets affluent families, ransom via encrypted apps, changes hideouts every 48 hrs',convictions:1,lastSeen:'Unknown',state:'Andhra Pradesh',risk:'HIGH',evidence:['digital','cctv'],associates:'2 unidentified males',status:'Absconding',custom:false},
+  {id:'C007',name:'Dinesh Rao',age:45,gender:'M',crimes:['arson','robbery'],mo:'Fire as distraction, loots adjacent premises, 3-4 person crew, stolen vehicles',convictions:2,lastSeen:'Pune',state:'Maharashtra',risk:'HIGH',evidence:['cctv','fingerprints'],associates:'Ganesh T.',status:'In Custody',custom:false},
+  {id:'C008',name:'Kavita Joshi',age:29,gender:'F',crimes:['fraud'],mo:'Identity theft, forged documents, fake bank accounts, operates in tier-2 cities',convictions:0,lastSeen:'Jaipur',state:'Rajasthan',risk:'MEDIUM',evidence:['documents','digital'],associates:'Unknown',status:'Under Investigation',custom:false},
+  {id:'C009',name:'Mohan Das',age:52,gender:'M',crimes:['theft','burglary'],mo:'Veteran pickpocket, railway stations and crowded markets, mentors junior criminals',convictions:6,lastSeen:'Mumbai',state:'Maharashtra',risk:'MEDIUM',evidence:['cctv','witness'],associates:'Multiple juniors',status:'Paroled',custom:false},
+  {id:'C010',name:'Ravi Patel',age:33,gender:'M',crimes:['assault','robbery'],mo:'ATM targets post-midnight, pepper spray and blade, hoodie, motorbike escape',convictions:2,lastSeen:'Ahmedabad',state:'Gujarat',risk:'HIGH',evidence:['cctv','blood','weapon'],associates:'None',status:'Wanted',custom:false},
+  {id:'C011',name:'Sunita Yadav',age:36,gender:'F',crimes:['fraud','cybercrime'],mo:'SIM swap fraud, OTP interception, social engineers bank staff by phone',convictions:1,lastSeen:'Lucknow',state:'Uttar Pradesh',risk:'MEDIUM',evidence:['digital','mobile'],associates:'Unknown',status:'Wanted',custom:false},
+  {id:'C012',name:'Kiran Hegde',age:41,gender:'M',crimes:['murder'],mo:'Contract killer, no fixed MO, changes identity, minimal forensic trace',convictions:0,lastSeen:'Unknown',state:'Unknown',risk:'HIGH',evidence:['dna'],associates:'Underworld contacts',status:'Absconding',custom:false},
+  {id:'C013',name:'Bharat Chowdhury',age:39,gender:'M',crimes:['extortion','gang-violence'],mo:'Business extortion racket, armed intimidation, hawala-based collection',convictions:3,lastSeen:'Kolkata',state:'West Bengal',risk:'HIGH',evidence:['witness','mobile','audio'],associates:'5-member gang',status:'In Custody',custom:false},
+  {id:'C014',name:'Anita Desai',age:44,gender:'F',crimes:['trafficking','fraud'],mo:'Fake overseas job offers, forged documents, travel agency front business',convictions:2,lastSeen:'Surat',state:'Gujarat',risk:'HIGH',evidence:['documents','digital','witness'],associates:'International network',status:'In Custody',custom:false},
+  {id:'C015',name:'Rajiv Menon',age:30,gender:'M',crimes:['cybercrime','theft'],mo:'ATM/petrol station card skimming, hidden cameras, sells data on dark web',convictions:1,lastSeen:'Chennai',state:'Tamil Nadu',risk:'MEDIUM',evidence:['digital','cctv','fingerprints'],associates:'Online buyers',status:'Under Investigation',custom:false},
+  {id:'C016',name:'Santosh Gupta',age:47,gender:'M',crimes:['drug-related','murder'],mo:'Wholesale narcotics via coastal routes, eliminates informants, bribes officials',convictions:2,lastSeen:'Mumbai',state:'Maharashtra',risk:'HIGH',evidence:['witness','digital','dna'],associates:'Coastal syndicate',status:'Absconding',custom:false},
+  {id:'C017',name:'Pooja Iyer',age:27,gender:'F',crimes:['fraud','theft'],mo:'Honey-trap targeting businessmen, steals valuables, blackmails victims',convictions:0,lastSeen:'Bangalore',state:'Karnataka',risk:'MEDIUM',evidence:['cctv','mobile'],associates:'1 male accomplice',status:'Under Investigation',custom:false},
+  {id:'C018',name:'Abdul Rehman',age:35,gender:'M',crimes:['robbery','assault','gang-violence'],mo:'Leads armed gang, jewellery heists, disables CCTV before entry, uses pre-planned maps',convictions:3,lastSeen:'Hyderabad',state:'Telangana',risk:'HIGH',evidence:['fingerprints','weapon','cctv'],associates:'6-member gang',status:'In Custody',custom:false},
+  {id:'C019',name:'Geeta Pillai',age:50,gender:'F',crimes:['murder','fraud'],mo:'Slow poisoning of elderly victims after gaining caregiver trust, forges wills',convictions:1,lastSeen:'Thiruvananthapuram',state:'Kerala',risk:'HIGH',evidence:['dna','documents','witness'],associates:'Unknown',status:'In Custody',custom:false},
+  {id:'C020',name:'Harish Tiwari',age:22,gender:'M',crimes:['theft','drug-related'],mo:'Two-wheeler theft at night, unlocked vehicles, sells parts to scrap dealers',convictions:0,lastSeen:'Bhopal',state:'Madhya Pradesh',risk:'LOW',evidence:['cctv','witness'],associates:'Scrap dealer network',status:'On Bail',custom:false},
+  {id:'C021',name:'Lakshmi Narayanan',age:55,gender:'F',crimes:['fraud','extortion'],mo:'Impersonates government officials, collects illegal fees for fake permits',convictions:2,lastSeen:'Coimbatore',state:'Tamil Nadu',risk:'MEDIUM',evidence:['audio','witness','documents'],associates:'2 fake constables',status:'Wanted',custom:false},
+  {id:'C022',name:'Deepak Verma',age:31,gender:'M',crimes:['sexual-assault','kidnapping'],mo:'Targets women alone at night, drugged beverages, rents properties under false IDs',convictions:1,lastSeen:'Noida',state:'Uttar Pradesh',risk:'HIGH',evidence:['dna','cctv','witness'],associates:'None',status:'In Custody',custom:false},
+  {id:'C023',name:'Sunil Khanna',age:48,gender:'M',crimes:['arson','extortion'],mo:'Burns property of non-compliant owners, protection money via middlemen',convictions:3,lastSeen:'Kanpur',state:'Uttar Pradesh',risk:'HIGH',evidence:['witness','cctv','mobile'],associates:'3-member team',status:'Wanted',custom:false},
+  {id:'C024',name:'Nalini Krishnan',age:33,gender:'F',crimes:['cybercrime','fraud'],mo:'Fake matrimonial profiles, emotional manipulation over weeks, then money transfer requests',convictions:0,lastSeen:'Hyderabad',state:'Telangana',risk:'MEDIUM',evidence:['digital','mobile'],associates:'Unknown',status:'Under Investigation',custom:false},
+  {id:'C025',name:'Imran Sheikh',age:36,gender:'M',crimes:['robbery','theft','gang-violence'],mo:'Motorbike chain-snatching crew, 3-person team, targets women at traffic signals',convictions:4,lastSeen:'Pune',state:'Maharashtra',risk:'HIGH',evidence:['cctv','witness','vehicle'],associates:'Saleem M., Ajay T.',status:'Paroled',custom:false},
+  {id:'C026',name:'Rekha Bose',age:42,gender:'F',crimes:['trafficking','kidnapping'],mo:'Recruits rural girls with fake domestic job offers, transports across states in private buses',convictions:2,lastSeen:'Patna',state:'Bihar',risk:'HIGH',evidence:['documents','witness','mobile'],associates:'Interstate network',status:'In Custody',custom:false},
+  {id:'C027',name:'Praveen Shetty',age:29,gender:'M',crimes:['murder','drug-related'],mo:'Drug territory violence with country-made weapons, disposes bodies near water bodies',convictions:1,lastSeen:'Mangalore',state:'Karnataka',risk:'HIGH',evidence:['dna','weapon','witness'],associates:'Rival gang contact',status:'Absconding',custom:false},
+  {id:'C028',name:'Chandrakala Mishra',age:38,gender:'F',crimes:['fraud','theft'],mo:'Temple trust fraud, fake religious donation drives, forges receipts, uses elderly fronts',convictions:1,lastSeen:'Varanasi',state:'Uttar Pradesh',risk:'MEDIUM',evidence:['documents','witness','digital'],associates:'3 volunteers',status:'Under Investigation',custom:false},
+  {id:'C029',name:'Muthuraman P.',age:44,gender:'M',crimes:['murder','assault'],mo:'Contract violence for land disputes, uses hired local muscle, targets property owners in rural areas',convictions:2,lastSeen:'Madurai',state:'Tamil Nadu',risk:'HIGH',evidence:['witness','mobile','blood'],associates:'Land mafia contacts',status:'Wanted',custom:false},
+  {id:'C030',name:'Farida Begum',age:35,gender:'F',crimes:['fraud','cybercrime'],mo:'KYC fraud using stolen Aadhaar data, opens fake accounts and avails loans in victims names',convictions:1,lastSeen:'Lucknow',state:'Uttar Pradesh',risk:'MEDIUM',evidence:['digital','documents','mobile'],associates:'Aadhaar data broker',status:'Under Investigation',custom:false},
+  {id:'C031',name:'Surjit Dhaliwal',age:50,gender:'M',crimes:['drug-related','trafficking'],mo:'Punjab-Rajasthan drug transit route, uses agricultural trucks as cover, bribes checkpost staff',convictions:3,lastSeen:'Amritsar',state:'Punjab',risk:'HIGH',evidence:['witness','vehicle','digital'],associates:'Cross-border network',status:'In Custody',custom:false},
+  {id:'C032',name:'Tejaswini Reddy',age:26,gender:'F',crimes:['cybercrime','fraud'],mo:'Fake job portal scam, collects registration fees from job seekers, disappears after payment',convictions:0,lastSeen:'Bengaluru',state:'Karnataka',risk:'MEDIUM',evidence:['digital','mobile'],associates:'Unknown',status:'Wanted',custom:false},
+  {id:'C033',name:'Gopal Teli',age:40,gender:'M',crimes:['robbery','theft'],mo:'Railway passenger theft using chloroform, targets sleeper class berths during night travel, 2-person team',convictions:4,lastSeen:'Nagpur',state:'Maharashtra',risk:'HIGH',evidence:['cctv','witness','fingerprints'],associates:'Ramesh O.',status:'Paroled',custom:false},
+  {id:'C034',name:'Anbu Selvan',age:37,gender:'M',crimes:['extortion','gang-violence'],mo:'Auto-spare parts market extortion, controls supply chain through intimidation, uses student wing as muscle',convictions:2,lastSeen:'Chennai',state:'Tamil Nadu',risk:'HIGH',evidence:['audio','witness'],associates:'Political faction contacts',status:'On Bail',custom:false},
+  {id:'C035',name:'Shobha Patil',age:48,gender:'F',crimes:['fraud','trafficking'],mo:'Fake NGO collecting donations for tribal children, diverts funds, also involved in domestic worker trafficking',convictions:1,lastSeen:'Pune',state:'Maharashtra',risk:'HIGH',evidence:['documents','digital','witness'],associates:'3 NGO co-conspirators',status:'Under Investigation',custom:false},
+  {id:'C036',name:'Manoj Bhatia',age:31,gender:'M',crimes:['cybercrime','theft'],mo:'Corporate espionage, plants keyloggers in company systems via fake IT support visits, sells data to rivals',convictions:0,lastSeen:'Gurgaon',state:'Haryana',risk:'MEDIUM',evidence:['digital','cctv'],associates:'Data broker',status:'Under Investigation',custom:false},
+  {id:'C037',name:'Rani Kumari',age:29,gender:'F',crimes:['murder','fraud'],mo:'Insurance fraud murders, takes out large policies on family members then eliminates them, slow-acting poison',convictions:0,lastSeen:'Patna',state:'Bihar',risk:'HIGH',evidence:['dna','documents'],associates:'Insurance agent accomplice',status:'In Custody',custom:false},
+  {id:'C038',name:'Feroz Khan',age:46,gender:'M',crimes:['robbery','assault','murder'],mo:'Highway robbery targeting trucks on remote routes, uses spike strips to stop vehicles, eliminates witnesses',convictions:3,lastSeen:'Jodhpur',state:'Rajasthan',risk:'HIGH',evidence:['fingerprints','weapon','witness'],associates:'4-person armed crew',status:'Wanted',custom:false},
+  {id:'C039',name:'Pushpa Devi',age:53,gender:'F',crimes:['fraud','extortion'],mo:'Loan shark operations in slums, charges 40-50% interest, uses sons for physical intimidation when defaulted',convictions:2,lastSeen:'Patna',state:'Bihar',risk:'MEDIUM',evidence:['witness','audio','documents'],associates:'2 sons as enforcers',status:'On Bail',custom:false},
+  {id:'C040',name:'Naveen Srinivas',age:34,gender:'M',crimes:['cybercrime','fraud','theft'],mo:'Deepfake video scams using AI-generated content of victims family members to demand ransom',convictions:0,lastSeen:'Bengaluru',state:'Karnataka',risk:'HIGH',evidence:['digital','mobile'],associates:'Unknown',status:'Wanted',custom:false},
+];
+
+let selC=[],selE=[],rfilt='',pg=1,pgSz=8,expId=null,lastR=null,lastM=[],lastInp={};
+
+// ═══ TAB ═══
+function sw(t){
+  ['analyze','database','stats'].forEach(x=>{document.getElementById('view-'+x).classList.add('hidden');document.getElementById('tab-'+x).classList.remove('active');});
+  document.getElementById('view-'+t).classList.remove('hidden');document.getElementById('tab-'+t).classList.add('active');
+  if(t==='database')renderDB();if(t==='stats')renderStats();
+}
+
+// ═══ TAGS ═══
+function tg(el,g){
+  const v=el.dataset.v;
+  if(g==='c'){if(el.classList.contains('sel')){el.classList.remove('sel');selC=selC.filter(x=>x!==v);}else{el.classList.add('sel');selC.push(v);}}
+  else{if(el.classList.contains('sel')){el.classList.remove('sel');selE=selE.filter(x=>x!==v);}else{el.classList.add('sel');selE.push(v);}}
+}
+
+// ═══ DATABASE RENDER ═══
+function getFiltered(){
+  const q=(document.getElementById('dbSearch')||{value:''}).value.toLowerCase();
+  const f=(document.getElementById('dbFilter')||{value:''}).value;
+  return DB.filter(c=>{
+    const mq=!q||c.name.toLowerCase().includes(q)||c.mo.toLowerCase().includes(q)||c.crimes.some(r=>r.includes(q))||(c.state||'').toLowerCase().includes(q)||(c.lastSeen||'').toLowerCase().includes(q);
+    const mf=!f||c.crimes.some(r=>r.includes(f));
+    const mr=!rfilt||c.risk===rfilt;
+    return mq&&mf&&mr;
+  });
+}
+function renderDB(){
+  const list=getFiltered(),tot=list.length,pages=Math.ceil(tot/pgSz)||1;
+  if(pg>pages)pg=1;
+  const slice=list.slice((pg-1)*pgSz,pg*pgSz);
+  document.getElementById('dbCount').textContent=tot+' RECORDS';
+  document.getElementById('dbCountBadge').textContent=DB.length+' RECORDS';
+  const rc={HIGH:'#FF5252',MEDIUM:'var(--gold)',LOW:'var(--cyan)'};
+  const sc={'In Custody':'var(--cyan)','Wanted':'#FF5252','Absconding':'#FF5252','On Bail':'var(--gold)','Paroled':'var(--gold)','Under Investigation':'var(--text-dim)','Acquitted':'#888'};
+  document.getElementById('dbList').innerHTML=slice.map(c=>`
+    <div class="dwrap" onclick="toggleExp('${c.id}')">
+      <div class="drow">
+        <div class="dav">${c.name.split(' ').map(n=>n[0]).join('')}</div>
+        <div style="flex:1;min-width:0">
+          <div class="dnm">${c.name}${c.custom?'<span class="added-badge">ADDED</span>':''}<span style="font-size:9px;color:var(--text-dim);font-weight:400;margin-left:5px">${c.id}·${c.gender}${c.age}y</span></div>
+          <div class="dsb">${c.crimes.join(' · ')} — ${c.lastSeen}, ${c.state}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
+          <div class="dbadge">${c.convictions} PRIOR</div>
+          <span style="font-size:9px;font-family:'Share Tech Mono',monospace;color:${sc[c.status]||'var(--text-dim)'}">${c.status.toUpperCase()}</span>
+        </div>
+        <div style="margin-left:7px;font-size:16px;color:${rc[c.risk]};flex-shrink:0">●</div>
+      </div>
+      <div class="dexp" id="exp-${c.id}">
+        <div class="grid2">
+          <div><div style="color:var(--cyan);font-size:9px;letter-spacing:1px;margin-bottom:3px">MODUS OPERANDI</div><div>${c.mo}</div></div>
+          <div><div style="color:var(--cyan);font-size:9px;letter-spacing:1px;margin-bottom:3px">PROFILE</div>
+            <div>Associates: <span style="color:var(--text)">${c.associates}</span></div>
+            <div>Evidence: <span style="color:var(--text)">${c.evidence.join(', ')}</span></div>
+            <div>Risk: <span style="color:${rc[c.risk]}">${c.risk}</span></div>
+            <div>Status: <span style="color:${sc[c.status]||'var(--text-dim)'}">${c.status}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  const pel=document.getElementById('pg');pel.innerHTML='';
+  for(let i=1;i<=pages;i++){const b=document.createElement('button');b.className='pgbtn'+(i===pg?' ap':'');b.textContent=i;b.onclick=(()=>{const p=i;return()=>{pg=p;renderDB();}})();pel.appendChild(b);}
+}
+function toggleExp(id){
+  const el=document.getElementById('exp-'+id);
+  if(expId&&expId!==id){const p=document.getElementById('exp-'+expId);if(p)p.classList.remove('open');}
+  el.classList.toggle('open');expId=el.classList.contains('open')?id:null;
+}
+function filterDB(){pg=1;renderDB();}
+function setRF(v,btn){rfilt=v;pg=1;document.querySelectorAll('.pgbtn').forEach(b=>{if(b.textContent.match(/^(ALL|HIGH|MEDIUM|LOW)$/)&&b!==btn)b.classList.remove('ap')});btn.classList.add('ap');renderDB();}
+
+// ═══ ADD CRIMINAL ═══
+function openAddModal(){document.getElementById('addModal').style.display='block';document.getElementById('addMsg').style.display='none';}
+function closeAddModal(){document.getElementById('addModal').style.display='none';['a-name','a-age','a-crimes','a-mo','a-conv','a-ev','a-assoc','a-city','a-state'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});}
+function addCriminal(){
+  const name=document.getElementById('a-name').value.trim();
+  const age=parseInt(document.getElementById('a-age').value)||0;
+  const crimes=document.getElementById('a-crimes').value.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const mo=document.getElementById('a-mo').value.trim();
+  if(!name||!mo||crimes.length===0){showAddMsg('⚠ Name, crime types and modus operandi are required.','#FF5252');return;}
+  const newId='C'+String(DB.length+1).padStart(3,'0');
+  DB.push({
+    id:newId,name,age,gender:document.getElementById('a-gender').value,
+    crimes,mo,
+    convictions:parseInt(document.getElementById('a-conv').value)||0,
+    lastSeen:document.getElementById('a-city').value.trim()||'Unknown',
+    state:document.getElementById('a-state').value.trim()||'Unknown',
+    risk:document.getElementById('a-risk').value,
+    evidence:document.getElementById('a-ev').value.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean),
+    associates:document.getElementById('a-assoc').value.trim()||'Unknown',
+    status:document.getElementById('a-status').value,
+    custom:true
+  });
+  try{window.storage.set('forensiq_db_custom',JSON.stringify(DB.filter(c=>c.custom)));}catch(e){}
+  showAddMsg('✅ '+name+' added as '+newId,'var(--green)');
+  setTimeout(()=>{closeAddModal();renderDB();},1200);
+}
+function showAddMsg(txt,color){const el=document.getElementById('addMsg');el.textContent=txt;el.style.color=color;el.style.display='block';}
+
+// ═══ STATS ═══
+function renderStats(){
+  const byRisk={HIGH:0,MEDIUM:0,LOW:0},byType={},byState={},byStatus={},byGender={M:0,F:0,O:0};
+  DB.forEach(c=>{byRisk[c.risk]++;byGender[c.gender]=(byGender[c.gender]||0)+1;c.crimes.forEach(cr=>{byType[cr]=(byType[cr]||0)+1;});byState[c.state]=(byState[c.state]||0)+1;byStatus[c.status]=(byStatus[c.status]||0)+1;});
+  const tconv=DB.reduce((s,c)=>s+c.convictions,0),avAge=Math.round(DB.reduce((s,c)=>s+c.age,0)/DB.length);
+  const topS=Object.entries(byState).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  const topC=Object.entries(byType).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const bMax=Math.max(...topC.map(c=>c[1]));
+  document.getElementById('statsContent').innerHTML=`
+    <div class="grid4" style="margin-bottom:14px">
+      <div class="stat-card"><div class="stat-num" style="color:#FF5252">${byRisk.HIGH}</div><div class="stat-lbl">High Risk</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--gold)">${byRisk.MEDIUM}</div><div class="stat-lbl">Medium Risk</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--cyan)">${byRisk.LOW}</div><div class="stat-lbl">Low Risk</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--text-bright)">${tconv}</div><div class="stat-lbl">Total Convictions</div></div>
+    </div>
+    <div class="grid4" style="margin-bottom:18px">
+      <div class="stat-card"><div class="stat-num" style="color:var(--text-bright)">${DB.length}</div><div class="stat-lbl">Total Records</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--text-bright)">${avAge}</div><div class="stat-lbl">Avg Age</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--text-bright)">${byGender.M||0}</div><div class="stat-lbl">Male</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--text-bright)">${byGender.F||0}</div><div class="stat-lbl">Female</div></div>
+    </div>
+    <div class="grid2" style="gap:18px">
+      <div>
+        <div class="rl" style="margin-bottom:10px">Crime Type Frequency</div>
+        ${topC.map(([t,n])=>`<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span style="color:var(--text);text-transform:capitalize">${t}</span><span style="font-family:'Share Tech Mono',monospace;color:var(--cyan)">${n}</span></div><div style="height:5px;background:var(--surface2);border:1px solid var(--border)"><div style="height:100%;width:${Math.round(n/bMax*100)}%;background:var(--crimson)"></div></div></div>`).join('')}
+      </div>
+      <div>
+        <div class="rl" style="margin-bottom:10px">Offenders by State</div>
+        ${topS.map(([s,n])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--text)">${s}</span><div style="display:flex;align-items:center;gap:7px"><div style="height:3px;width:${n*16}px;background:var(--cyan-dim)"></div><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyan);min-width:14px;text-align:right">${n}</span></div></div>`).join('')}
+        <div class="divider"></div>
+        <div class="rl" style="margin-bottom:7px">Status Breakdown</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">${Object.entries(byStatus).map(([s,n])=>`<span style="font-size:9px;font-family:'Share Tech Mono',monospace;padding:2px 7px;border:1px solid var(--border-bright);color:var(--text-dim)">${s}: ${n}</span>`).join('')}</div>
+      </div>
+    </div>`;
+}
+
+// ═══ MATCH ═══
+function matchCriminals(crimes,evidence,desc){
+  return DB.map(c=>{
+    let s=0;
+    crimes.forEach(t=>{if(c.crimes.includes(t))s+=35;});
+    evidence.forEach(e=>{if(c.evidence.includes(e))s+=12;});
+    (desc||'').toLowerCase().split(/\s+/).forEach(w=>{if(w.length>4&&c.mo.toLowerCase().includes(w))s+=5;});
+    return{...c,score:Math.min(s,98)};
+  }).filter(c=>c.score>0).sort((a,b)=>b.score-a.score).slice(0,5);
+}
+
+// ═══ AI ANALYSIS ═══
+async function runAnalysis(){
+  const d=v=>(document.getElementById(v)||{value:''}).value;
+  const caseId=d('caseId')||('FIR-'+Date.now());
+  if(!d('caseDesc')&&selC.length===0){alert('Please add case description or select crime type.');return;}
+  lastInp={caseId,fir:d('caseId'),date:d('incidentDate'),ps:d('policeStation'),dist:d('district'),
+    officer:d('officer'),dept:d('department'),ipc:d('ipcSections'),court:d('courtName'),
+    location:d('location'),victim:d('victim'),desc:d('caseDesc'),modus:d('modus'),
+    evNotes:d('evNotes'),suspect:d('suspect'),crimes:[...selC],evidence:[...selE]};
+  document.getElementById('resEmpty').classList.add('hidden');
+  document.getElementById('resContent').classList.add('hidden');
+  document.getElementById('resLoad').classList.remove('hidden');
+  document.getElementById('matchEmpty').classList.add('hidden');
+  document.getElementById('matchContent').classList.add('hidden');
+  document.getElementById('resBadge').textContent='ANALYZING...';
+  document.getElementById('analyzeBtn').disabled=true;
+  const msgs=['ANALYZING CASE DATA...','PROFILING OFFENDER...','CROSS-REFERENCING DB...','GENERATING INSIGHTS...'];
+  let mi=0;const mt=setInterval(()=>{mi=(mi+1)%msgs.length;document.getElementById('loadTxt').textContent=msgs[mi];},900);
+  const prompt=`You are an expert forensic analysis AI for Indian law enforcement. Analyze this case. Return ONLY valid JSON, no markdown.
+Case: ${caseId} | Crimes: ${selC.join(', ')||'Unknown'} | Location: ${lastInp.location||'Unknown'} | Date: ${lastInp.date||'Unknown'}
+FIR/PS: ${lastInp.ps||'Unknown'} | IPC Sections: ${lastInp.ipc||'Unknown'} | Officer: ${lastInp.officer||'Unknown'}
+Description: ${lastInp.desc||'Not provided'}
+MO: ${lastInp.modus||'Not provided'}
+Evidence: ${selE.join(', ')||'None'} | Notes: ${lastInp.evNotes||'None'}
+Suspect: ${lastInp.suspect||'Unknown'}
+Return: {"classification":"string","riskLevel":"HIGH|MEDIUM|LOW","riskReason":"string","summary":"3-4 sentences","behavioralPattern":"2-3 sentences","recommendedActions":["a","b","c","d","e"],"investigationPriority":"string","estimatedOffenderProfile":"string","legalNotes":"relevant IPC/IT Act sections to consider"}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    lastR=JSON.parse(data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+  }catch(e){
+    lastR={classification:(selC.map(c=>c.charAt(0).toUpperCase()+c.slice(1)).join(' / ')||'Unclassified')+' — Pending Investigation',riskLevel:selC.some(c=>['murder','assault','robbery','kidnapping'].includes(c))?'HIGH':'MEDIUM',riskReason:'Based on crime type and evidence pattern.',summary:`Case involving ${selC.join(', ')||'unspecified crime'}. Evidence: ${selE.join(', ')||'none'}. Pending further lab analysis.`,behavioralPattern:'Opportunistic pattern. Profiling requires additional data.',recommendedActions:['Secure all physical evidence with chain of custody documentation','Review CCTV footage within 500m perimeter','Conduct witness canvassing in immediate vicinity','File seizure memo under CrPC 102 for digital evidence','Cross-reference with CCTNS database for similar cases'],investigationPriority:'Urgent',estimatedOffenderProfile:'Profile pending investigation',legalNotes:'Applicable sections to be determined by Investigating Officer'};
+  }
+  clearInterval(mt);
+  lastM=matchCriminals(lastInp.crimes,lastInp.evidence,lastR.summary);
+  showResults();
+}
+
+function showResults(){
+  document.getElementById('resLoad').classList.add('hidden');
+  document.getElementById('resContent').classList.remove('hidden');
+  document.getElementById('r-cls').textContent=lastR.classification||'N/A';
+  const rl=(lastR.riskLevel||'MEDIUM').toLowerCase();
+  const rcls=rl==='high'?'r-high':rl==='low'?'r-low':'r-med';
+  document.getElementById('r-risk').innerHTML=`<span class="rbadge ${rcls}">${lastR.riskLevel||'MEDIUM'}</span> <span style="font-size:11px;color:var(--text-dim);margin-left:7px">${lastR.riskReason||''}</span>`;
+  document.getElementById('r-sum').textContent=lastR.summary||'';
+  document.getElementById('r-pat').textContent=lastR.behavioralPattern||'';
+  document.getElementById('r-act').innerHTML=(lastR.recommendedActions||[]).map((a,i)=>`<span class="sn">${i+1}</span>${a}`).join('<br>');
+  document.getElementById('resBadge').textContent='COMPLETE';
+  document.getElementById('analyzeBtn').disabled=false;
+  showMatches(lastM);
+}
+
+function showMatches(m){
+  document.getElementById('matchBadge').textContent=m.length+' MATCHES';
+  if(!m.length){document.getElementById('matchEmpty').classList.remove('hidden');return;}
+  const ri={HIGH:'🔴',MEDIUM:'🟡',LOW:'🟢'};
+  document.getElementById('matchContent').innerHTML=m.map(x=>`
+    <div class="mc ${x.risk.toLowerCase()}">
+      <div class="mh"><div class="mn">${ri[x.risk]} ${x.name} <span style="font-size:10px;color:var(--text-dim);font-weight:400">${x.id}·${x.age}y·${x.state}</span></div>
+      <div class="ms ${x.score>=70?'high':x.score>=40?'medium':'low'}">${Math.round(x.score)}% MATCH</div></div>
+      <div class="md"><strong style="color:var(--text)">Crimes:</strong> ${x.crimes.join(', ')} | <strong style="color:var(--text)">Prior:</strong> ${x.convictions} | <strong style="color:var(--text)">Status:</strong> ${x.status}</div>
+      <div class="md" style="margin-top:3px">${x.mo.substring(0,110)}...</div>
+    </div>`).join('');
+  document.getElementById('matchContent').classList.remove('hidden');
+}
+
+// ═══ REPORT ENGINE ═══
+function buildReport(){
+  if(!lastR)return null;
+  const r=lastR,i=lastInp,m=lastM;
+  const now=new Date();
+  const ts=now.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})+', '+now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const rC={HIGH:'#C0392B',MEDIUM:'#B7770D',LOW:'#1565C0'};
+  const rBg={HIGH:'#FDF0EE',MEDIUM:'#FDFBEE',LOW:'#EEF4FD'};
+  const matchRows=m.map(x=>`<tr><td>${x.id}</td><td><b>${x.name}</b></td><td>${x.age}</td><td>${x.crimes.join(', ')}</td><td style="color:${rC[x.risk]};font-weight:700">${x.risk}</td><td>${x.status}</td><td style="font-weight:700;color:${x.score>=70?'#C0392B':x.score>=40?'#B7770D':'#1565C0'}">${Math.round(x.score)}%</td></tr>`).join('');
+  const evHTML=i.evidence&&i.evidence.length?i.evidence.map(e=>`<span style="display:inline-block;background:#f0f0f0;border:1px solid #ccc;padding:2px 8px;font-size:11px;margin:2px;border-radius:2px">${e}</span>`).join(' '):'<em style="color:#888">None collected</em>';
+  const crHTML=i.crimes&&i.crimes.length?i.crimes.map(c=>`<span style="display:inline-block;background:#FEF0EF;border:1px solid #FADBD8;color:#7B241C;padding:2px 8px;font-size:11px;margin:2px;border-radius:2px">${c.toUpperCase()}</span>`).join(' '):'<em style="color:#888">Unspecified</em>';
+  const actHTML=(r.recommendedActions||[]).map((a,idx)=>`<li>${a}</li>`).join('');
+  return`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Forensic Report — ${i.fir||i.caseId}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Times New Roman',Times,serif;font-size:13px;color:#111;background:#fff}
+.page{max-width:860px;margin:0 auto;padding:0}
+.letterhead{text-align:center;padding:24px 40px 16px;border-bottom:3px double #000}
+.lh-title{font-size:18px;font-weight:900;letter-spacing:1px;text-transform:uppercase}
+.lh-sub{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#555;margin-top:3px}
+.lh-emblem{font-size:36px;margin-bottom:6px}
+.confidential-bar{background:#7B241C;color:#fff;text-align:center;padding:5px;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase}
+.content{padding:28px 40px}
+.case-box{border:2px solid #000;padding:14px 18px;margin-bottom:20px}
+.case-box-title{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#7B241C;margin-bottom:10px;border-bottom:1px solid #ccc;padding-bottom:5px}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px}
+.meta-item{display:flex;gap:6px;font-size:12px}
+.meta-item .lbl{font-weight:700;min-width:140px;flex-shrink:0;color:#333}
+.sec{margin-bottom:20px;page-break-inside:avoid}
+.sec-title{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7B241C;border-bottom:1.5px solid #7B241C;padding-bottom:4px;margin-bottom:10px}
+.risk-block{border-left:5px solid ${rC[r.riskLevel||'MEDIUM']};background:${rBg[r.riskLevel||'MEDIUM']};padding:12px 16px;margin-bottom:12px}
+.risk-level{font-size:18px;font-weight:900;color:${rC[r.riskLevel||'MEDIUM']};letter-spacing:2px;text-transform:uppercase}
+.risk-reason{font-size:12px;color:#555;margin-top:4px}
+.text-box{background:#F9F9F9;border-left:3px solid #ccc;padding:10px 14px;font-size:13px;line-height:1.8;color:#333;margin-bottom:8px;font-family:'Times New Roman',serif}
+.cls-box{background:#1a1a2e;color:#4FC3F7;padding:10px 14px;font-family:'Courier New',monospace;font-size:12px;letter-spacing:1px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+th{background:#1a1a2e;color:#fff;padding:7px 9px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+td{padding:7px 9px;border:1px solid #ddd;vertical-align:top}
+tr:nth-child(even) td{background:#fafafa}
+ol{padding-left:20px}li{margin-bottom:5px;line-height:1.7}
+.sig-section{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:20px}
+.sig-box{border-top:1px solid #000;padding-top:8px;text-align:center;font-size:11px}
+.sig-box .role{font-weight:700;font-size:11px}
+.disclaimer{background:#FEF9E7;border:1px solid #F9E79F;padding:12px 14px;font-size:11px;color:#555;line-height:1.7;margin-top:16px}
+.footer-bar{background:#1a1a2e;color:#9E9E9E;padding:10px 40px;font-size:10px;display:flex;justify-content:space-between;margin-top:0}
+@media print{.page{max-width:100%}.no-print{display:none}@page{margin:1.5cm;size:A4}}
+</style></head><body>
+<div class="page">
+<div class="confidential-bar">CONFIDENTIAL — FORENSIC CASE REPORT — FOR AUTHORIZED LAW ENFORCEMENT USE ONLY</div>
+<div class="letterhead">
+  <div class="lh-emblem">⚖️</div>
+  <div class="lh-title">Forensic Case Analysis Report</div>
+  <div class="lh-sub">ForensIQ — AI-Assisted Forensic Intelligence System | India Edition</div>
+  <div style="margin-top:8px;font-size:11px;color:#333">${i.ps||'Police Station Not Specified'} | ${i.dist||'District Not Specified'} | ${i.dept||'Department Not Specified'}</div>
+</div>
+
+<div class="content">
+
+<div class="case-box">
+  <div class="case-box-title">Case Identification & Registration Details</div>
+  <div class="meta-grid">
+    <div class="meta-item"><span class="lbl">FIR / Case Number:</span><span>${i.fir||'Not Assigned'}</span></div>
+    <div class="meta-item"><span class="lbl">Date of Incident / FIR:</span><span>${i.date||'Not Specified'}</span></div>
+    <div class="meta-item"><span class="lbl">Police Station:</span><span>${i.ps||'Not Specified'}</span></div>
+    <div class="meta-item"><span class="lbl">District:</span><span>${i.dist||'Not Specified'}</span></div>
+    <div class="meta-item"><span class="lbl">Investigating Officer:</span><span>${i.officer||'Not Specified'}</span></div>
+    <div class="meta-item"><span class="lbl">Unit / Department:</span><span>${i.dept||'Not Specified'}</span></div>
+    <div class="meta-item"><span class="lbl">Applicable IPC Sections:</span><span>${i.ipc||'To be determined'}</span></div>
+    <div class="meta-item"><span class="lbl">Court (if applicable):</span><span>${i.court||'Not Filed'}</span></div>
+    <div class="meta-item"><span class="lbl">Incident Location:</span><span>${i.location||'Not Specified'}</span></div>
+    <div class="meta-item"><span class="lbl">Victim:</span><span>${i.victim||'Not Disclosed / Pending'}</span></div>
+    <div class="meta-item"><span class="lbl">Report Generated:</span><span>${ts}</span></div>
+    <div class="meta-item"><span class="lbl">Report Reference:</span><span>RPT-${Date.now().toString(36).toUpperCase()}</span></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">Section 1 — Crime Type & Classification</div>
+  <div style="margin-bottom:10px"><div style="font-size:11px;color:#555;margin-bottom:5px">Crime Categories:</div>${crHTML}</div>
+  <div class="cls-box">▶ CLASSIFICATION: ${r.classification}</div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">Section 2 — Risk Assessment</div>
+  <div class="risk-block"><div class="risk-level">Risk Level: ${r.riskLevel||'MEDIUM'}</div><div class="risk-reason">${r.riskReason||''}</div></div>
+  ${r.investigationPriority?`<p style="font-size:12px"><strong>Investigation Priority:</strong> ${r.investigationPriority}</p>`:''}
+</div>
+
+${i.desc?`<div class="sec"><div class="sec-title">Section 3 — Case Description</div><div class="text-box">${i.desc}</div></div>`:''}
+${i.modus?`<div class="sec"><div class="sec-title">Section 4 — Modus Operandi</div><div class="text-box">${i.modus}</div></div>`:''}
+
+<div class="sec">
+  <div class="sec-title">Section 5 — Evidence Summary</div>
+  <div style="margin-bottom:10px"><div style="font-size:11px;color:#555;margin-bottom:5px">Evidence Types Collected:</div>${evHTML}</div>
+  ${i.evNotes?`<div class="text-box"><strong>Evidence Notes / Lab Results:</strong><br>${i.evNotes}</div>`:''}
+</div>
+
+<div class="sec">
+  <div class="sec-title">Section 6 — AI Forensic Analysis</div>
+  <div class="text-box">${r.summary}</div>
+</div>
+
+<div class="sec">
+  <div class="sec-title">Section 7 — Behavioral & Offender Profile</div>
+  <div class="text-box">${r.behavioralPattern}</div>
+  ${r.estimatedOffenderProfile?`<div class="text-box" style="border-left-color:#7B241C;margin-top:6px"><strong>Estimated Offender Profile:</strong> ${r.estimatedOffenderProfile}</div>`:''}
+</div>
+
+<div class="sec">
+  <div class="sec-title">Section 8 — Recommended Investigation Actions</div>
+  <ol>${actHTML}</ol>
+</div>
+
+${r.legalNotes?`<div class="sec"><div class="sec-title">Section 9 — Legal Notes & Applicable Sections</div><div class="text-box">${r.legalNotes}</div></div>`:''}
+
+<div class="sec">
+  <div class="sec-title">Section ${r.legalNotes?'10':'9'} — Criminal Database Match Analysis</div>
+  ${m.length>0?`<table><thead><tr><th>Record ID</th><th>Name</th><th>Age</th><th>Crime Types</th><th>Risk</th><th>Status</th><th>Match %</th></tr></thead><tbody>${matchRows}</tbody></table>
+  <p style="font-size:10px;color:#888;margin-top:7px;line-height:1.6">* Match percentages are based on crime type overlap, evidence correlation, and modus operandi keyword analysis. These are investigative leads only and do not constitute legal evidence of guilt or involvement.</p>`
+  :`<p style="color:#888;font-size:12px;padding:10px 0">No criminal database matches found for this case profile.</p>`}
+</div>
+
+${i.suspect?`<div class="sec"><div class="sec-title">Suspect Description (on record)</div><div class="text-box">${i.suspect}</div></div>`:''}
+
+<div class="sig-section">
+  <div class="sig-box"><div style="height:50px"></div><div class="role">Investigating Officer</div><div>${i.officer||'__________________________'}</div><div style="margin-top:2px;color:#555">${i.dept||''}</div></div>
+  <div class="sig-box"><div style="height:50px"></div><div class="role">Forensic Analyst</div><div>__________________________</div><div style="margin-top:2px;color:#555">Forensic Science Laboratory</div></div>
+  <div class="sig-box"><div style="height:50px"></div><div class="role">Countersigning Authority</div><div>__________________________</div><div style="margin-top:2px;color:#555">Superintendent of Police</div></div>
+</div>
+
+<div class="disclaimer">
+  <strong>⚠ IMPORTANT LEGAL DISCLAIMER:</strong> This report has been generated using ForensIQ, an AI-assisted forensic analysis tool. All AI-generated content (risk assessment, behavioral profiling, criminal classification) is intended as an investigative aid only and must be reviewed and certified by a qualified forensic professional before submission to any court. Criminal database match percentages are algorithmic similarity scores and do not constitute proof of guilt. This document must comply with the Indian Evidence Act 1872, Code of Criminal Procedure 1973, and applicable data protection regulations before use in legal proceedings. Section 45A of the Indian Evidence Act may apply for electronic records certification.
+</div>
+</div>
+
+<div class="footer-bar">
+  <span>ForensIQ AI Forensic System v4.0 — India Edition</span>
+  <span>CONFIDENTIAL — AUTHORIZED USE ONLY</span>
+  <span>${ts}</span>
+</div>
+</div>
+</body></html>`;
+}
+
+function dlReport(fmt){
+  if(!lastR){alert('Run analysis first.');return;}
+  const html=buildReport();
+  if(fmt==='html'){
+    const blob=new Blob([html],{type:'text/html'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=`ForensIQ_Report_${lastInp.fir||lastInp.caseId||'CASE'}_${new Date().toISOString().slice(0,10)}.html`;
+    a.click();URL.revokeObjectURL(a.href);
+    showToast('📗 HTML report downloaded');
+  } else if(fmt==='pdf'){
+    const w=window.open('','_blank');
+    w.document.write(html);w.document.close();
+    setTimeout(()=>{w.print();},600);
+    showToast('📕 PDF: Use browser Save as PDF in print dialog');
+  } else if(fmt==='docx'){
+    // RTF format — opens in MS Word natively
+    const rtf=buildRTF();
+    const blob=new Blob([rtf],{type:'application/msword'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=`ForensIQ_Report_${lastInp.fir||lastInp.caseId||'CASE'}_${new Date().toISOString().slice(0,10)}.doc`;
+    a.click();URL.revokeObjectURL(a.href);
+    showToast('📘 DOCX downloaded — opens in MS Word');
+  }
+  closePreview();
+}
+
+function buildRTF(){
+  const r=lastR,i=lastInp,m=lastM,now=new Date();
+  const ts=now.toLocaleDateString('en-IN');
+  function esc(s){return(s||'').replace(/[\\{}]/g,c=>'\\'+c).replace(/[^\x00-\x7F]/g,'?');}
+  function h1(t){return`\\pard\\sb240\\sa120\\b\\fs28 ${esc(t)}\\b0\\par\n`;}
+  function h2(t){return`\\pard\\sb180\\sa80\\b\\fs22\\cf1 ${esc(t)}\\b0\\cf0\\par\n`;}
+  function para(t){return`\\pard\\sb80\\sa80\\fs20 ${esc(t)}\\par\n`;}
+  function field(l,v){return`\\pard\\sb60\\sa60\\fs20 {\\b ${esc(l)}: }${esc(v)}\\par\n`;}
+  const matchRows=m.map(x=>`${esc(x.name)} (${x.id}) — ${x.crimes.join(', ')} — Risk: ${x.risk} — Match: ${Math.round(x.score)}%`).join('\\line\n');
+  const actions=(r.recommendedActions||[]).map((a,idx)=>`${idx+1}. ${esc(a)}`).join('\\par\n');
+  return`{\\rtf1\\ansi\\deff0
+{\\fonttbl{\\f0 Times New Roman;}{\\f1 Arial;}{\\f2 Courier New;}}
+{\\colortbl;\\red192\\green57\\blue43;\\red0\\green0\\blue0;\\red85\\green85\\blue85;}
+\\paperw12240\\paperh15840\\margl1440\\margr1440\\margt1440\\margb1440
+\\pard\\qc\\sb120\\sa60\\b\\f1\\fs32 FORENSIC CASE ANALYSIS REPORT\\b0\\par
+\\pard\\qc\\fs18\\cf3 ForensIQ AI Forensic Intelligence System — India Edition\\cf0\\par
+\\pard\\qc\\fs18 ${esc(i.ps||'')} | ${esc(i.dist||'')} | ${esc(i.dept||'')}\\par
+\\pard\\qc\\fs16\\cf3 CONFIDENTIAL — FOR AUTHORIZED LAW ENFORCEMENT USE ONLY\\cf0\\par
+\\pard\\brdrb\\brdrs\\brdrw10\\brdr0 \\par
+${h1('CASE IDENTIFICATION')}
+${field('FIR / Case Number',i.fir||'Not Assigned')}
+${field('Date of Incident',i.date||'Not Specified')}
+${field('Police Station',i.ps||'Not Specified')}
+${field('District',i.dist||'Not Specified')}
+${field('Investigating Officer',i.officer||'Not Specified')}
+${field('Department',i.dept||'Not Specified')}
+${field('IPC Sections',i.ipc||'To be determined')}
+${field('Court',i.court||'Not Filed')}
+${field('Location',i.location||'Not Specified')}
+${field('Victim',i.victim||'Not Disclosed')}
+${field('Report Generated',ts)}
+${h2('Section 1 — Crime Classification')}
+${field('Crime Types',i.crimes&&i.crimes.join(', '))}
+${para('Classification: '+(r.classification||'N/A'))}
+${h2('Section 2 — Risk Assessment')}
+${para('RISK LEVEL: '+(r.riskLevel||'MEDIUM'))}
+${para(r.riskReason||'')}
+${i.desc?h2('Section 3 — Case Description')+para(i.desc):''}
+${i.modus?h2('Section 4 — Modus Operandi')+para(i.modus):''}
+${h2('Section 5 — Evidence')}
+${para('Evidence Types: '+(i.evidence&&i.evidence.join(', ')||'None'))}
+${i.evNotes?para('Notes: '+i.evNotes):''}
+${h2('Section 6 — AI Forensic Analysis')}
+${para(r.summary||'')}
+${h2('Section 7 — Behavioral Profile')}
+${para(r.behavioralPattern||'')}
+${r.estimatedOffenderProfile?para('Estimated Profile: '+r.estimatedOffenderProfile):''}
+${h2('Section 8 — Recommended Actions')}
+${actions}
+${r.legalNotes?h2('Section 9 — Legal Notes')+para(r.legalNotes):''}
+${m.length>0?h2('Criminal Database Matches')+para(matchRows):''}
+${i.suspect?h2('Suspect Description')+para(i.suspect):''}
+\\pard\\sb400\\brdrt\\brdrs\\brdrw10\\brdr0\\par
+\\pard\\sb120 {\\b Investigating Officer:} ____________________________\\tab {\\b Forensic Analyst:} __________________________\\par
+\\pard\\sb180 {\\b Countersigning Authority:} ____________________________\\par
+\\pard\\sb240\\fs18\\cf3 DISCLAIMER: This AI-generated report is an investigative aid only. Must be reviewed by a qualified forensic professional before court submission. Refer Indian Evidence Act 1872 and CrPC 1973.\\cf0\\par
+}`;
+}
+
+function openPreview(){
+  if(!lastR){alert('Run analysis first.');return;}
+  const html=buildReport();
+  document.getElementById('previewContent').innerHTML=`<iframe srcdoc="${html.replace(/"/g,'&quot;')}" style="width:100%;height:75vh;border:none"></iframe>`;
+  document.getElementById('previewModal').style.display='block';
+}
+function closePreview(){document.getElementById('previewModal').style.display='none';document.getElementById('previewContent').innerHTML='';}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},3000);
+}
+
+// Load saved custom records
+try{
+  window.storage.get('forensiq_db_custom').then(res=>{
+    if(res&&res.value){
+      const saved=JSON.parse(res.value);
+      saved.forEach(c=>{if(!DB.find(x=>x.id===c.id))DB.push(c);});
+    }
+  }).catch(()=>{});
+}catch(e){}
+</script>
+</body></html>
